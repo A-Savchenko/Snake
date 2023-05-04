@@ -1,0 +1,160 @@
+public class SinglyLinkedList<E> {
+    
+    private ListNode<E> head;
+    private int size;
+    
+    public SinglyLinkedList() {
+        head = null;
+        size = 0;
+    }
+    
+    public SinglyLinkedList(SinglyLinkedList<E> oldList) {
+        if (oldList == null) {
+            throw new NullPointerException("oldList cannot be null");
+        }
+        if (oldList.isEmpty()) {
+            return;
+        }
+        ListNode<E> oldNode = oldList.head;
+        ListNode<E> newNode = new ListNode<E>(oldNode.getValue());
+        head = newNode;
+        oldNode = oldNode.getNext();
+        while (oldNode != null) {
+            newNode.setNext(new ListNode<E>(oldNode.getValue()));
+            newNode = newNode.getNext();
+            oldNode = oldNode.getNext();
+        }
+        size = oldList.size;
+    }
+    
+    public boolean add(E value) {
+        if (head == null) {
+            head = new ListNode<E>(value);
+        } else {
+            ListNode<E> current = head;
+            while (current.getNext() != null) {
+                current = current.getNext();
+            }
+            current.setNext(new ListNode<E>(value));
+        }
+        size++;
+        return true;
+    }
+    
+    public boolean add(int index, E value) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index out of bounds: " + index);
+        }
+        if (index == size) {
+            return add(value);
+        }
+        ListNode<E> newNode = new ListNode<E>(value);
+        if (index == 0) {
+            newNode.setNext(head);
+            head = newNode;
+        } else {
+            ListNode<E> current = head;
+            for (int i = 0; i < index - 1; i++) {
+                current = current.getNext();
+            }
+            newNode.setNext(current.getNext());
+            current.setNext(newNode);
+        }
+        size++;
+        return true;
+    }
+    
+    public void clear() {
+        head = null;
+        size = 0;
+    }
+    
+    public int size() {
+        return size;
+    }
+    
+    public ListNode<E> get(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index out of bounds: " + index);
+        }
+        ListNode<E> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.getNext();
+        }
+        return current;
+    }
+    
+       public E set(int index, E value) {
+        if (index < 0 || index >= size) {
+            throw new NoSuchElementException();
+        }
+        ListNode<E> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.getNext();
+        }
+        E temp = current.getData();
+        current.setData(value);
+        return temp;
+    }
+
+    public E remove(int index) {
+        if (isEmpty()) {
+            throw new NoSuchElementException();
+        }
+        if (index < 0 || index >= size) {
+            throw new NoSuchElementException();
+        }
+        E temp;
+        if (index == 0) {
+            temp = head.getData();
+            head = head.getNext();
+        } else {
+            ListNode<E> current = head;
+            for (int i = 0; i < index - 1; i++) {
+                current = current.getNext();
+            }
+            temp = current.getNext().getData();
+            current.setNext(current.getNext().getNext());
+        }
+        size--;
+        return temp;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    public boolean contains(E value) {
+        return indexOf(value) != -1;
+    }
+
+    public int indexOf(E value) {
+        ListNode<E> current = head;
+        for (int i = 0; i < size; i++) {
+            if (current.getData().equals(value)) {
+                return i;
+            }
+            current = current.getNext();
+        }
+        return -1;
+    }
+    
+    public SinglyLinkedList(SinglyLinkedList oldList) {
+        if (oldList == null) {
+            throw new IllegalArgumentException("Cannot copy null list");
+        }
+        this.size = oldList.size;
+        if (oldList.head == null) {
+            this.head = null;
+        } else {
+            this.head = new ListNode<E>(oldList.head.getData());
+            ListNode<E> current = this.head;
+            ListNode<E> oldCurrent = oldList.head.getNext();
+            while (oldCurrent != null) {
+                current.setNext(new ListNode<E>(oldCurrent.getData()));
+                current = current.getNext();
+                oldCurrent = oldCurrent.getNext();
+            }
+        }
+    }
+}
